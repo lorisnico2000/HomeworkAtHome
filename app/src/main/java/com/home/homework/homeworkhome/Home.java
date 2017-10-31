@@ -12,13 +12,16 @@ import android.text.InputType;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import java.util.ArrayList;
 
 public class Home extends AppCompatActivity {
 
     public static ArrayList<String> subjects;
+    private Spinner subjectSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +31,7 @@ public class Home extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         subjects = new ArrayList<String>();
+        loadSubjects();
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -48,6 +52,7 @@ public class Home extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         subjects.add( input.getText().toString() );
+                        loadSubjects();
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -82,6 +87,18 @@ public class Home extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    public void loadSubjects(){
+        ArrayList<String> spinnerObjects = new ArrayList<String>();
+        spinnerObjects.add("Alle Fächer");
+        for (String s : subjects){
+            spinnerObjects.add(s);
+        }
+        subjectSpinner = (Spinner) findViewById(R.id.spinner);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, spinnerObjects);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        subjectSpinner.setAdapter(adapter);
+        subjectSpinner.setSelection(0);
     }
 
 
