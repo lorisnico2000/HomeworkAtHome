@@ -32,23 +32,52 @@ public class Home extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
-
-
-
+        subjects = new ArrayList<>();
+        loadSubjects();
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         final View actionB = findViewById(R.id.action_b);
+        final FloatingActionButton buttonB = (FloatingActionButton) actionB;
+        buttonB.setOnClickListener(new View.OnClickListener() {
+                                       @Override
+                                       public void onClick(View view) {
+                                           //Intent intent = new Intent(getBaseContext(), Work.class);
+                                           //startActivity(intent);
 
-        FloatingActionButton actionC = new FloatingActionButton(getBaseContext());
+                                           builder.setTitle("Title");
+
+                                           final EditText input = new EditText(getApplicationContext());
+
+                                           input.setInputType(InputType.TYPE_CLASS_TEXT);
+                                           builder.setView(input);
+
+                                           builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                               @Override
+                                               public void onClick(DialogInterface dialog, int which) {
+                                                   subjects.add(input.getText().toString());
+                                                   loadSubjects();
+                                               }
+                                           });
+                                           builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                               @Override
+                                               public void onClick(DialogInterface dialog, int which) {
+                                                   dialog.cancel();
+                                               }
+                                           });
+
+                                           builder.show();
+                                       }
+                                   });
+        /*FloatingActionButton actionC = new FloatingActionButton(getBaseContext());
         actionC.setTitle("Hide/Show Action above");
         actionC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 actionB.setVisibility(actionB.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
             }
-        });
+        });*/
 
         final FloatingActionsMenu menuMultipleActions = (FloatingActionsMenu) findViewById(R.id.multiple_actions);
-        menuMultipleActions.addButton(actionC);
+        //menuMultipleActions.addButton(actionC);
 
 
 
