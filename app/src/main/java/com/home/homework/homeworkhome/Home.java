@@ -140,7 +140,7 @@ public class Home extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void loadSubjects(){
+    public Spinner loadSubjects(){
         ArrayList<String> spinnerObjects = new ArrayList<String>();
         spinnerObjects.add("Alle Fächer");
         for (String s : subjects){
@@ -151,6 +151,7 @@ public class Home extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         subjectSpinner.setAdapter(adapter);
         subjectSpinner.setSelection(0);
+        return subjectSpinner;
     }
 
 
