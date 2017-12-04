@@ -24,10 +24,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     // table names
     private static final String TABLE_SUBJECT = "subject";
+    private static final String TABLE_HOMEWORK = "homework";
 
     // Subject Table Columns
-    private static final String KEY_ID = "id";
-    private static final String KEY_NAME = "name";
+    private static final String SUBJECT_ID = "id";
+    private static final String SUBJECT_NAME = "name";
+    // Homework Table Columns
+    private static final String HW_ID = "id";
+    private static final String HW_NAME = "name";
+    private static final String HW_DESC = "description";
+    private static final String HW_SUBJECT = "fk_subject";
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -37,7 +43,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_CONTACTS_TABLE = "CREATE TABLE " + TABLE_SUBJECT + "("
-                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT"
+                + SUBJECT_ID + " INTEGER PRIMARY KEY," + SUBJECT_NAME + " TEXT"
                 + ")";
         db.execSQL(CREATE_CONTACTS_TABLE);
     }
@@ -61,7 +67,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(KEY_NAME, subject); // Contact Name
+        values.put(SUBJECT_NAME, subject); // Contact Name
 
         // Inserting Row
         db.insert(TABLE_SUBJECT, null, values);
@@ -69,23 +75,23 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     // Getting single subject
-    String getSubject(int id) {
+    public Subject getSubject(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.query(TABLE_SUBJECT, new String[] { KEY_ID,
-                        KEY_NAME }, KEY_ID + "=?",
+        Cursor cursor = db.query(TABLE_SUBJECT, new String[] { SUBJECT_ID,
+                        SUBJECT_NAME }, SUBJECT_ID + "=?",
                 new String[] { String.valueOf(id) }, null, null, null, null);
         if (cursor != null)
             cursor.moveToFirst();
 
-        String subject = cursor.getString(1);
+        Subject subject = new Subject(cursor.getInt(1), cursor.getString(1));
         // return contact
         return subject;
     }
 
     // Getting All subjects
-    public List<String> getAllSubjects() {
-        List<String> list = new ArrayList<String>();
+    public ArrayList<Subject> getAllSubjects() {
+        ArrayList<Subject> list = new ArrayList<Subject>();
         // Select All Query
         String selectQuery = "SELECT  * FROM " + TABLE_SUBJECT;
 
@@ -96,7 +102,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 // Adding contact to list
-                list.add(cursor.getString(1));
+                list.add(new Subject(cursor.getInt(1), cursor.getString(1)));
             } while (cursor.moveToNext());
         }
 
@@ -109,17 +115,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(KEY_NAME, name);
+        values.put(SUBJECT_NAME, name);
 
         // updating row
-        return db.update(TABLE_SUBJECT, values, KEY_ID + " = ?",
+        return db.update(TABLE_SUBJECT, values, SUBJECT_ID + " = ?",
                 new String[] { Integer.toString(id) });
     }
 
     // Deleting single subject
     public void deleteSubject(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_SUBJECT, KEY_ID + " = ?",
+        db.delete(TABLE_SUBJECT, SUBJECT_ID + " = ?",
                 new String[] { Integer.toString(id) });
         db.close();
     }

@@ -22,8 +22,8 @@ import java.util.ArrayList;
 
 public class Home extends AppCompatActivity {
 
-    public static ArrayList<String> subjects;
     private Spinner subjectSpinner;
+    public static DatabaseHandler db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +32,10 @@ public class Home extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        subjects = new ArrayList<>();
+        subjectSpinner = (Spinner) findViewById(R.id.spinner);
+        db = new DatabaseHandler(getBaseContext());
         loadSubjects();
+
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         final View actionB = findViewById(R.id.action_b);
         final FloatingActionButton buttonB = (FloatingActionButton) actionB;
@@ -53,7 +55,7 @@ public class Home extends AppCompatActivity {
                                            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                                @Override
                                                public void onClick(DialogInterface dialog, int which) {
-                                                   subjects.add(input.getText().toString());
+                                                   db.addSubject(input.getText().toString());
                                                    loadSubjects();
                                                }
                                            });
@@ -67,55 +69,17 @@ public class Home extends AppCompatActivity {
                                            builder.show();
                                        }
                                    });
-        /*FloatingActionButton actionC = new FloatingActionButton(getBaseContext());
-        actionC.setTitle("Hide/Show Action above");
-        actionC.setOnClickListener(new View.OnClickListener() {
+        final View actionA = findViewById(R.id.action_a);
+        actionA.setOnClickListener( new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                actionB.setVisibility(actionB.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
-            }
-        });*/
-
-        final FloatingActionsMenu menuMultipleActions = (FloatingActionsMenu) findViewById(R.id.multiple_actions);
-        //menuMultipleActions.addButton(actionC);
-
-
-
-
-
-/*
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Intent intent = new Intent(getBaseContext(), Work.class);
-                //startActivity(intent);
-
-                builder.setTitle("Title");
-
-                final EditText input = new EditText(getApplicationContext());
-
-                input.setInputType(InputType.TYPE_CLASS_TEXT);
-                builder.setView(input);
-
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        subjects.add( input.getText().toString() );
-                        loadSubjects();
-                    }
-                });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-
-                builder.show();
+                Intent intent = new Intent(getBaseContext(), Work.class);
+                startActivity(intent);
             }
         });
-*/
+
+        final FloatingActionsMenu menuMultipleActions = (FloatingActionsMenu) findViewById(R.id.multiple_actions);
+
     }
 
     @Override
@@ -143,10 +107,9 @@ public class Home extends AppCompatActivity {
     public Spinner loadSubjects(){
         ArrayList<String> spinnerObjects = new ArrayList<String>();
         spinnerObjects.add("Alle Fächer");
-        for (String s : subjects){
-            spinnerObjects.add(s);
+        for (Subject s : db.getAllSubjects()){
+            spinnerObjects.add(s.name);
         }
-        subjectSpinner = (Spinner) findViewById(R.id.spinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, spinnerObjects);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         subjectSpinner.setAdapter(adapter);
