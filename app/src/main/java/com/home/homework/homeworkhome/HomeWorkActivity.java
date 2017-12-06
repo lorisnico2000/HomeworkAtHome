@@ -22,6 +22,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Die HomeWorkActivity dient zu Erstellung einer neuen Hausaufgabe.
+ * Hier lassen sich die Attribute einer Aufgabe vergeben und ein Fach auswählen.
+ */
 public class HomeWorkActivity extends AppCompatActivity {
 
     private ExpandableListView listView;
@@ -43,6 +47,39 @@ public class HomeWorkActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_work);
 
+        setupInput();
+
+        setupSubjectSpinner();
+
+        loadSubjects();
+
+        /*
+        listView = (ExpandableListView)findViewById(R.id.list);
+        initData();
+        listAdapter = new ExpandableListAdapter(this,listDataHeader,listHash);
+        listView.setAdapter(listAdapter);
+        */
+
+    }
+
+    private void setupSubjectSpinner() {
+        subjectSpinner = (Spinner) findViewById(R.id.workSpinner);
+        subjectSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedSubject = adapter.getItem(position);
+                Toast.makeText(getApplicationContext(), position + " " + selectedSubject.getId() + selectedSubject.getName(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+                // TODO Auto-generated method stub
+            }
+        });
+    }
+
+    private void setupInput() {
         txtName = (EditText) findViewById(R.id.txtName);
         txtDesc = (EditText) findViewById(R.id.txtDescription);
         btnSave = (Button) findViewById(R.id.btnSave);
@@ -67,32 +104,6 @@ public class HomeWorkActivity extends AppCompatActivity {
                 }
             }
         });
-
-
-        subjectSpinner = (Spinner) findViewById(R.id.workSpinner);
-        subjectSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedSubject = adapter.getItem(position);
-                Toast.makeText(getApplicationContext(), position + " " + selectedSubject.getId() + selectedSubject.getName(), Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
-                // TODO Auto-generated method stub
-            }
-        });
-
-        loadSubjects();
-
-        /*
-        listView = (ExpandableListView)findViewById(R.id.list);
-        initData();
-        listAdapter = new ExpandableListAdapter(this,listDataHeader,listHash);
-        listView.setAdapter(listAdapter);
-        */
-
     }
 
     private void initData() {

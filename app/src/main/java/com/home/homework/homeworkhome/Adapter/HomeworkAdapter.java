@@ -12,7 +12,10 @@ import com.home.homework.homeworkhome.Model.Homework;
 import java.util.ArrayList;
 
 /**
- * Created by loris on 05.12.2017.
+ * Created by loris on 15.11.2017.
+ *
+ * Der HomeworkAdapter wird benutzt, um die Aufgaben in einer ListView anzuzeigen.
+ * Die Klasse dient dazu, den Namen in der Liste anzuzeigen und im Hintergrund mit der ID verknüpft zu haben.
  */
 
 public class HomeworkAdapter extends ArrayAdapter<Homework> {
@@ -40,6 +43,10 @@ public class HomeworkAdapter extends ArrayAdapter<Homework> {
         return values.get(position);
     }
 
+    /**
+     * Löscht Aufgabe aus der Datenbank.
+     * @param position Gibt an, welche Position die Aufgabe im Array hat.
+     */
     public void deleteItem(int position){
         values.get(position).delete();
     }
@@ -49,22 +56,25 @@ public class HomeworkAdapter extends ArrayAdapter<Homework> {
         return position;
     }
 
-
-    // And the "magic" goes here
-    // This is for the "passive" state of the spinner
+    /**
+     * Gibt das View Objekt zurück, dass als Item in der ListView angezeit wird.
+     *
+     * @param position Gibt an, welche Position die Aufgabe im Array hat.
+     * @param convertView Ungenutzter Parameter.
+     * @param parent Parent Objekt (ListView)
+     * @return View Objekt, dass als Item in der ListView angezeit wird.
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // I created a dynamic TextView here, but you can reference your own  custom layout for each spinner item
+
         TextView label = new TextView(context);
         label.setTextColor(Color.BLACK);
-        // Then you can get the current item using the values array (Users array) and the current position
-        // You can NOW reference each method you has created in your bean object (User class)
         label.setText(values.get(position).getName());
         label.setPadding(20,20,40,20);
         label.setTextSize(20);
 
-        // And finally return your dynamic (or custom) view for each spinner item
         return label;
+
     }
 
 }

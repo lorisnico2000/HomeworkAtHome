@@ -38,11 +38,6 @@ public class HomeActivity extends AppCompatActivity {
     private SubjectAdapter adapter;
     private HomeworkAdapter hwAdapter;
 
-    /**
-     *
-     *
-     * @param savedInstanceState
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -3,8 +3,10 @@ package com.home.homework.homeworkhome.Model;
 import com.home.homework.homeworkhome.HomeActivity;
 
 /**
- * Created by loris on 04.12.2017.
+ * Created by loris on 30.10.2017.
  *
+ * Die Klasse Homework beinhaltet alle Daten einer Aufgabe.
+ * Durch die Methoden lassen sich Aufgaben Erstellen, ändern und löschen.
  */
 
 public class Homework {
@@ -21,6 +23,10 @@ public class Homework {
         this.subject = s;
     }
 
+    /**
+     * Mit der Methode lässt sich sowohl speichern als auch ändern.
+     * Wenn die Id == Null ist, wird eine neue Aufgabe erstellt. Ansonsten die Aufgabe nach ID geändert.
+     */
     public void save(){
         if(this.id == null){//CREATE
             HomeActivity.db.addHW(this);
@@ -29,6 +35,9 @@ public class Homework {
         }
     }
 
+    /**
+     * Aufgabe löschen.
+     */
     public void delete(){
         HomeActivity.db.deleteHW(this.id);
     }

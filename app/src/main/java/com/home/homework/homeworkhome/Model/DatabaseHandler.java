@@ -13,26 +13,25 @@ import com.home.homework.homeworkhome.HomeActivity;
 import java.util.ArrayList;
 
 /**
- * Created by loris on 14.11.2017.
+ * Created by loris on 06.11.2017.
+ *
+ * Der DatabaseHandler regelt den Zugriff auf die Datenbank.
+ * Er ist zuständig für die Erstellung und Aktualisierung der Db.
+ * Des weiteren werden Funktionen für alle CRUD Operationen bereitgestellt.
  */
 
 public class DatabaseHandler extends SQLiteOpenHelper {
 
-    // All Static variables
-    // Database Version
     private static final int DATABASE_VERSION = 1;
 
-    // Database Name
     private static final String DATABASE_NAME = "homework";
 
-    // table names
     private static final String TABLE_SUBJECT = "subject";
     private static final String TABLE_HOMEWORK = "homework";
 
-    // Subject Table Columns
     private static final String SUBJECT_ID = "id";
     private static final String SUBJECT_NAME = "name";
-    // Homework Table Columns
+
     private static final String HW_ID = "id";
     private static final String HW_NAME = "name";
     private static final String HW_DESC = "description";
@@ -42,7 +41,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    // Creating Tables
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_SUBJECT_TABLE = "CREATE TABLE " + TABLE_SUBJECT + "("
@@ -55,14 +53,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(CREATE_HOMEWORK_TABLE);
     }
 
-    // Upgrading database
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Drop older table if existed
+
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_SUBJECT);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_HOMEWORK);
 
-        // Create tables again
         onCreate(db);
     }
 
@@ -70,19 +66,25 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * All CRUD(Create, Read, Update, Delete) Operations for Subjects
      */
 
-    // Adding new subject
+    /**
+     * Neues Fach hinzufügen
+     * @param subject Fach Objekt das hinzugefügt wird.
+     */
     public void addSubject(String subject) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(SUBJECT_NAME, subject); // Subject Name
+        values.put(SUBJECT_NAME, subject);
 
-        // Inserting Row
         db.insert(TABLE_SUBJECT, null, values);
-        db.close(); // Closing database connection
+        db.close();
     }
 
-    // Getting single subject
+    /**
+     * Einzelnes Fach nach ID erhalten.
+     * @param id ID nach der gesucht wird.
+     * @return gibt das Fach Objekt oder null zurück.
+     */
     public Subject getSubject(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -91,48 +93,54 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 new String[] { String.valueOf(id) }, null, null, null, null);
         if (cursor != null && cursor.moveToFirst()) {
             Subject subject = new Subject(cursor.getInt(1), cursor.getString(1));
-            // return contact
             return subject;
         }else{
             return null;
         }
     }
 
-    // Getting All subjects
+    /**
+     * Gibt alle Fächer zurück.
+     * @param defaultMsg Die Message, die als Standard bei einem Dropdown eingestellt ist. (Z.B. Alle Fächer anzeigen)
+     * @return Liste aus Fächern.
+     */
     public ArrayList<Subject> getAllSubjects(String defaultMsg) {
         ArrayList<Subject> list = new ArrayList<Subject>();
         list.add(new Subject(null, defaultMsg));
-        // Select All Query
+
         String selectQuery = "SELECT  * FROM " + TABLE_SUBJECT;
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
-        // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
-                // Adding contact to list
                 list.add(new Subject(cursor.getInt(1), cursor.getString(1)));
             } while (cursor.moveToNext());
         }
 
-        // return Subjects list
         return list;
     }
 
-    // Updating single subject
-    public int updateSubject(int id, String name) {
+    /**
+     * Fach ändern.
+     * @param id Id des zu ändernden Fachs.
+     * @param name Neuer Name
+     */
+    public void updateSubject(int id, String name) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(SUBJECT_NAME, name);
 
-        // updating row
-        return db.update(TABLE_SUBJECT, values, SUBJECT_ID + " = ?",
+        db.update(TABLE_SUBJECT, values, SUBJECT_ID + " = ?",
                 new String[] { Integer.toString(id) });
     }
 
-    // Deleting single subject
+    /**
+     * Fach löschen.
+     * @param id ID des zu löschenden Fachs.
+     */
     public void deleteSubject(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_SUBJECT, SUBJECT_ID + " = ?",
@@ -140,22 +148,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    // Count subjects
-    public int countSubjects() {
-        String countQuery = "SELECT  * FROM " + TABLE_SUBJECT;
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(countQuery, null);
-        cursor.close();
-
-        // return count
-        return cursor.getCount();
-    }
-
     /**
      * All CRUD(Create, Read, Update, Delete) Operations for Homework
      */
 
-    // Adding new Homework
+    /**
+     * Neuee Aufgabe hinzufügen
+     * @param hw Homework Objekt das hinzugefügt wird.
+     */
     public void addHW(Homework hw) {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -164,12 +164,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(HW_DESC, hw.getName()); // Homework Description
         values.put(HW_SUBJECT, hw.getSubject().getId()); // Homework Subject (FK)
 
-        // Inserting Row
         db.insert(TABLE_HOMEWORK, null, values);
-        db.close(); // Closing database connection
+        db.close();
     }
 
-    // Getting single Homework
+    /**
+     * Einzelne Aufgabe nach ID erhalten.
+     * @param id ID nach der gesucht wird.
+     * @return gibt das Aufgabe Objekt oder null zurück.
+     */
     public Homework getHW(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -179,33 +182,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (cursor != null && cursor.moveToFirst()) {
             Log.d("CursorType", "" + cursor.getType(cursor.getColumnIndex(HW_SUBJECT)));
             Homework hw = new Homework(cursor.getInt(1), cursor.getString(1), cursor.getString(1), HomeActivity.db.getSubject(cursor.getInt(1)));
-            // return contact
             return hw;
         }else{
             return null;
         }
     }
 
-    // Getting All Homework
-    public ArrayList<Homework> getAllHW() {
-        ArrayList<Homework> list = new ArrayList<Homework>();
-        // Select All Query
-        String selectQuery = "SELECT  * FROM " + TABLE_HOMEWORK;
-
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-
-        // looping through all rows and adding to list
-        if (cursor != null && cursor.moveToFirst()) {
-            do {
-                // Adding contact to list
-                list.add(new Homework(cursor.getInt(1), cursor.getString(1), cursor.getString(1), getSubject(cursor.getInt(cursor.getColumnIndex(HW_SUBJECT)))));
-            } while (cursor.moveToNext());
-        }
-
-        // return Homework list
-        return list;
-    }
+    /**
+     * Gibt alle Hausaufgaben eines Fachs zurück. Falls ID des Fachs null ist, werden alle Fächer zurückgegeben.
+     * @param s Das Fach, nachdem gefiltert wird.
+     * @return Liste aus Hausaugaben.
+     */
     public ArrayList<Homework> getAllHWBySubject(Subject s) {
         ArrayList<Homework> list = new ArrayList<Homework>();
         String selectQuery;
@@ -219,19 +206,19 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
-        // looping through all rows and adding to list
         if (cursor != null && cursor.moveToFirst()) {
             do {
-                // Adding contact to list
                 list.add(new Homework(cursor.getInt(1), cursor.getString(1), cursor.getString(1), getSubject(cursor.getInt(cursor.getColumnIndex(HW_SUBJECT)))));
             } while (cursor.moveToNext());
         }
 
-        // return Homework list
         return list;
     }
 
-    // Updating single Homework
+    /**
+     * Hausaufgabe ändern.
+     * @param hw Die zu ändernde Aufgabe.
+     */
     public int updateHW(Homework hw) {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -240,29 +227,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(HW_DESC, hw.getName()); // Homework Description
         values.put(HW_SUBJECT, hw.getSubject().getId()); // Homework Subject (FK)
 
-        // updating row
         return db.update(TABLE_HOMEWORK, values, HW_ID + " = ?",
                 new String[] { Integer.toString(hw.getId()) });
     }
 
-    // Deleting single Homework
+    /**
+     * Hausaufgabe löschen.
+     * @param id ID der zu löschenden Aufgabe.
+     */
     public void deleteHW(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_HOMEWORK, HW_ID + " = ?",
                 new String[] { Integer.toString(id) });
         Log.d("DELETE", "DELETED MF");
         db.close();
-    }
-
-    // Count Homework
-    public int countHW() {
-        String countQuery = "SELECT  * FROM " + TABLE_HOMEWORK;
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(countQuery, null);
-        cursor.close();
-
-        // return count
-        return cursor.getCount();
     }
 
 }

@@ -1,7 +1,10 @@
 package com.home.homework.homeworkhome.Model;
 
 /**
- * Created by loris on 04.12.2017.
+ * Created by loris on 30.10.2017.
+ *
+ * Die Klasse Subject beinhaltet lediglich die Daten einer Hausaufgabe.
+ * Die Klasse wird vom SubjectAdapter benutzt, um die Aufgaben in einem Dropdown anzuzeigen.
  */
 
 public class Subject {

@@ -12,7 +12,10 @@ import com.home.homework.homeworkhome.Model.Subject;
 import java.util.ArrayList;
 
 /**
- * Created by loris on 05.12.2017.
+ * Created by loris on 25.11.2017.
+ *
+ * Der SubjectAdapter wird benutzt, um die Fächer in einem Spinner (Dropdown Selection) anzuzeigen.
+ * Die Klasse dient dazu, den Namen in dem Spinner anzuzeigen und im Hintergrund mit der ID verknüpft zu haben.
  */
 
 public class SubjectAdapter extends ArrayAdapter<Subject> {
@@ -45,8 +48,14 @@ public class SubjectAdapter extends ArrayAdapter<Subject> {
     }
 
 
-    // And the "magic" goes here
-    // This is for the "passive" state of the spinner
+    /**
+     * Gibt das View Objekt zurück, dass im Spinner angezeit wird.
+     *
+     * @param position Gibt an, welche Position die Aufgabe im Array hat.
+     * @param convertView Ungenutzter Parameter.
+     * @param parent Parent Objekt (Spinner)
+     * @return View Objekt, dass als Item in dem Spinner angezeit wird.
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // I created a dynamic TextView here, but you can reference your own  custom layout for each spinner item
@@ -62,8 +71,14 @@ public class SubjectAdapter extends ArrayAdapter<Subject> {
         return label;
     }
 
-    // And here is when the "chooser" is popped up
-    // Normally is the same view, but you can customize it if you want
+    /**
+     * Gibt das View Objekt zurück, dass im Spinner angezeit wird, WENN er ausgeklappt ist.
+     *
+     * @param position Gibt an, welche Position die Aufgabe im Array hat.
+     * @param convertView Ungenutzter Parameter.
+     * @param parent Parent Objekt (Spinner)
+     * @return View Objekt, dass als Item in dem Spinner angezeit wird.
+     */
     @Override
     public View getDropDownView(int position, View convertView,
                                 ViewGroup parent) {
