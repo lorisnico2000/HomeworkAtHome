@@ -5,10 +5,10 @@ package com.home.homework.homeworkhome;
  */
 
 public class Subject {
-    public int id;
+    public Integer id;
     public String name;
 
-    public Subject(int i, String n){
+    public Subject(Integer i, String n){
         this.id = i;
         this.name = n;
     }

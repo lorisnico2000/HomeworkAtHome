@@ -5,23 +5,27 @@ package com.home.homework.homeworkhome;
  */
 
 public class Homework {
+
     public Integer id;
     public String name;
+    public String desc;
     public Subject subject;
 
-    public Homework(String n, Subject s){
-        this.id = null;
+    public Homework(Integer i, String n, String d, Subject s){
+        this.id = i;
         this.name = n;
+        this.desc = d;
         this.subject = s;
     }
 
     public void save(){
         if(this.id == null){//CREATE
-
+            Home.db.addHW(this);
         }else{//UPDATE
-
+            Home.db.updateHW(this);
         }
     }
+
     public void delete(){
 
     }

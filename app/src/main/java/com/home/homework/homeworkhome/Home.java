@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 public class Home extends AppCompatActivity {
 
     private Spinner subjectSpinner;
+    private ListView lw;
     public static DatabaseHandler db;
 
     @Override
@@ -35,6 +37,12 @@ public class Home extends AppCompatActivity {
         subjectSpinner = (Spinner) findViewById(R.id.spinner);
         db = new DatabaseHandler(getBaseContext());
         loadSubjects();
+
+        lw = (ListView) findViewById(R.id.listview);
+        if(db.getAllHW() != null){
+            HomeworkAdapter hwAdapter = new HomeworkAdapter(this,  android.R.layout.simple_list_item_1, db.getAllHW());
+            lw.setAdapter(hwAdapter);
+        }
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         final View actionB = findViewById(R.id.action_b);
@@ -104,17 +112,15 @@ public class Home extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public Spinner loadSubjects(){
-        ArrayList<String> spinnerObjects = new ArrayList<String>();
-        spinnerObjects.add("Alle Fächer");
-        for (Subject s : db.getAllSubjects()){
-            spinnerObjects.add(s.name);
-        }
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, spinnerObjects);
+    private Spinner loadSubjects(){
+        SubjectAdapter adapter = new SubjectAdapter(this, android.R.layout.simple_spinner_item, Home.db.getAllSubjects("Kein Fach"));
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         subjectSpinner.setAdapter(adapter);
         subjectSpinner.setSelection(0);
         return subjectSpinner;
+    }
+    private void loadHomework(){
+        //TODO
     }
 
 
