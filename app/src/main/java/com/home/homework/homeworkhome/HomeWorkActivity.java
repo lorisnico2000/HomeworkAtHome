@@ -12,19 +12,28 @@ import android.widget.ExpandableListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.home.homework.homeworkhome.Adapter.ExpandableListAdapter;
+import com.home.homework.homeworkhome.Adapter.SubjectAdapter;
+import com.home.homework.homeworkhome.Model.Homework;
+import com.home.homework.homeworkhome.Model.Subject;
+import com.homeActivity.homework.homeworkhome.R;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class Work extends AppCompatActivity {
+public class HomeWorkActivity extends AppCompatActivity {
 
     private ExpandableListView listView;
     private ExpandableListAdapter listAdapter;
+
     private List<String> listDataHeader;
     private HashMap<String,List<String>> listHash;
+
     private Spinner subjectSpinner;
     private SubjectAdapter adapter;
     private Subject selectedSubject;
+
     private Button btnSave;
     private EditText txtName;
     private EditText txtDesc;
@@ -42,26 +51,31 @@ public class Work extends AppCompatActivity {
             public void onClick(View v) {
                 String n = txtName.getText().toString();
                 if(TextUtils.isEmpty(txtName.getText().toString())){
+
                     txtName.setError("Bitte einen Namen eingeben...");
-                    Toast.makeText(getApplicationContext(), "Bitte einen Namen eingaben...", Toast.LENGTH_SHORT);
+
                 }else{
+
                     String d = txtDesc.getText().toString();
                     Subject s = selectedSubject;
 
                     Homework hw = new Homework(null, n, d, s);
                     hw.save();
-                    Intent intent = new Intent(getBaseContext(), Home.class);
+                    Intent intent = new Intent(getBaseContext(), HomeActivity.class);
                     startActivity(intent);
+
                 }
             }
         });
+
+
         subjectSpinner = (Spinner) findViewById(R.id.workSpinner);
         subjectSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selectedSubject = adapter.getItem(position);
-                Toast.makeText(getApplicationContext(), position + " " + selectedSubject.id + selectedSubject.name, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), position + " " + selectedSubject.getId() + selectedSubject.getName(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -69,6 +83,7 @@ public class Work extends AppCompatActivity {
                 // TODO Auto-generated method stub
             }
         });
+
         loadSubjects();
 
         /*
@@ -94,7 +109,7 @@ public class Work extends AppCompatActivity {
         listHash.put(listDataHeader.get(0),notifications);
     }
     public Spinner loadSubjects(){
-        adapter = new SubjectAdapter(this, android.R.layout.simple_spinner_item, Home.db.getAllSubjects("Kein Fach"));
+        adapter = new SubjectAdapter(this, android.R.layout.simple_spinner_item, HomeActivity.db.getAllSubjects("Kein Fach"));
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         subjectSpinner.setAdapter(adapter);
         subjectSpinner.setSelection(0);

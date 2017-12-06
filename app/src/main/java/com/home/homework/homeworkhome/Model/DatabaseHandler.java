@@ -1,4 +1,4 @@
-package com.home.homework.homeworkhome;
+package com.home.homework.homeworkhome.Model;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -6,9 +6,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.Toast;
+
+import com.home.homework.homeworkhome.HomeActivity;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by loris on 14.11.2017.
@@ -148,8 +150,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         // return count
         return cursor.getCount();
     }
+
     /**
-     * All CRUD(Create, Read, Update, Delete) Operations for Subjects
+     * All CRUD(Create, Read, Update, Delete) Operations for Homework
      */
 
     // Adding new Homework
@@ -157,9 +160,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(HW_NAME, hw.name); // Homework Name
-        values.put(HW_DESC, hw.name); // Homework Description
-        values.put(HW_SUBJECT, hw.subject.id); // Homework Subject (FK)
+        values.put(HW_NAME, hw.getName()); // Homework Name
+        values.put(HW_DESC, hw.getName()); // Homework Description
+        values.put(HW_SUBJECT, hw.getSubject().getId()); // Homework Subject (FK)
 
         // Inserting Row
         db.insert(TABLE_HOMEWORK, null, values);
@@ -175,7 +178,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 new String[] { String.valueOf(id) }, null, null, null, null);
         if (cursor != null && cursor.moveToFirst()) {
             Log.d("CursorType", "" + cursor.getType(cursor.getColumnIndex(HW_SUBJECT)));
-            Homework hw = new Homework(cursor.getInt(1), cursor.getString(1), cursor.getString(1), Home.db.getSubject(cursor.getInt(1)));
+            Homework hw = new Homework(cursor.getInt(1), cursor.getString(1), cursor.getString(1), HomeActivity.db.getSubject(cursor.getInt(1)));
             // return contact
             return hw;
         }else{
@@ -203,19 +206,43 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         // return Homework list
         return list;
     }
+    public ArrayList<Homework> getAllHWBySubject(Subject s) {
+        ArrayList<Homework> list = new ArrayList<Homework>();
+        String selectQuery;
+
+        if(s.getId() == null){//Select all
+            selectQuery = "SELECT  * FROM " + TABLE_HOMEWORK;
+        }else{// Select By Subject ID
+            selectQuery = "SELECT  * FROM " + TABLE_HOMEWORK + " WHERE " + HW_SUBJECT + " = " + s.getId() ;
+        }
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                // Adding contact to list
+                list.add(new Homework(cursor.getInt(1), cursor.getString(1), cursor.getString(1), getSubject(cursor.getInt(cursor.getColumnIndex(HW_SUBJECT)))));
+            } while (cursor.moveToNext());
+        }
+
+        // return Homework list
+        return list;
+    }
 
     // Updating single Homework
     public int updateHW(Homework hw) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(HW_NAME, hw.name); // Homework Name
-        values.put(HW_DESC, hw.name); // Homework Description
-        values.put(HW_SUBJECT, hw.subject.id); // Homework Subject (FK)
+        values.put(HW_NAME, hw.getName()); // Homework Name
+        values.put(HW_DESC, hw.getName()); // Homework Description
+        values.put(HW_SUBJECT, hw.getSubject().getId()); // Homework Subject (FK)
 
         // updating row
         return db.update(TABLE_HOMEWORK, values, HW_ID + " = ?",
-                new String[] { Integer.toString(hw.id) });
+                new String[] { Integer.toString(hw.getId()) });
     }
 
     // Deleting single Homework
@@ -223,6 +250,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_HOMEWORK, HW_ID + " = ?",
                 new String[] { Integer.toString(id) });
+        Log.d("DELETE", "DELETED MF");
         db.close();
     }
 

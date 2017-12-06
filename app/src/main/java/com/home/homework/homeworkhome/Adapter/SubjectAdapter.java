@@ -1,4 +1,4 @@
-package com.home.homework.homeworkhome;
+package com.home.homework.homeworkhome.Adapter;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -7,21 +7,23 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.home.homework.homeworkhome.Model.Subject;
+
 import java.util.ArrayList;
 
 /**
  * Created by loris on 05.12.2017.
  */
 
-public class HomeworkAdapter extends ArrayAdapter<Homework> {
+public class SubjectAdapter extends ArrayAdapter<Subject> {
 
     // Your sent context
     private Context context;
     // Your custom values for the spinner (User)
-    private ArrayList<Homework> values;
+    private ArrayList<Subject> values;
 
-    public HomeworkAdapter(Context context, int textViewResourceId,
-                          ArrayList<Homework> values) {
+    public SubjectAdapter(Context context, int textViewResourceId,
+                          ArrayList<Subject> values) {
         super(context, textViewResourceId, values);
         this.context = context;
         this.values = values;
@@ -33,7 +35,7 @@ public class HomeworkAdapter extends ArrayAdapter<Homework> {
     }
 
     @Override
-    public Homework getItem(int position){
+    public Subject getItem(int position){
         return values.get(position);
     }
 
@@ -50,11 +52,11 @@ public class HomeworkAdapter extends ArrayAdapter<Homework> {
         // I created a dynamic TextView here, but you can reference your own  custom layout for each spinner item
         TextView label = new TextView(context);
         label.setTextColor(Color.BLACK);
+        label.setPadding(10,10,10,10);
+        label.setTextSize(16);
         // Then you can get the current item using the values array (Users array) and the current position
         // You can NOW reference each method you has created in your bean object (User class)
-        label.setText(values.get(position).name);
-        label.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        label.setPadding(0, 10, 0, 10);
+        label.setText(values.get(position).getName());
 
         // And finally return your dynamic (or custom) view for each spinner item
         return label;
@@ -67,8 +69,11 @@ public class HomeworkAdapter extends ArrayAdapter<Homework> {
                                 ViewGroup parent) {
         TextView label = new TextView(context);
         label.setTextColor(Color.BLACK);
-        label.setText(values.get(position).name);
+        label.setPadding(20,20,20,20);
+        label.setTextSize(17);
+        label.setText(values.get(position).getName());
 
         return label;
     }
+
 }

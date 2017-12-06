@@ -10,12 +10,12 @@ import static org.junit.Assert.assertEquals;
  * Created by sven.reutimann on 21.11.2017.
  */
 
-public class HomeUnitTest {
+public class HomeActivityUnitTest {
 
     @Test
     public void testLoadSubjects() throws Exception {
-        Home home = new Home();
-        Assert.assertNotNull(home.loadSubjects());
+        HomeActivity homeActivity = new HomeActivity();
+        Assert.assertNotNull(homeActivity.loadSubjects());
     }
 
 }
